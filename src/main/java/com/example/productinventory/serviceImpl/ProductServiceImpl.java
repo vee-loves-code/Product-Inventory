@@ -3,7 +3,7 @@ package com.example.productinventory.serviceImpl;
 import com.example.productinventory.exception.ResourceNotFoundException;
 import com.example.productinventory.entity.Product;
 import com.example.productinventory.payload.request.ProductRequest;
-import com.example.productinventory.payload.response.ApiResponse;
+
 import com.example.productinventory.payload.response.ProductResponse;
 import com.example.productinventory.repository.ProductRepository;
 import com.example.productinventory.service.ProductService;
@@ -78,15 +78,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> getProductByName(String name, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<ProductResponse> getProductByName(String name, int pageNumber, int pageSize) {
+        Pageable pageable = modelMapper.map(PageRequest.of(pageNumber, pageSize), Pageable.class);
         Page<Product> products = productRepository.findByProductNameContainingIgnoreCase(name, pageable);
         if (products.isEmpty()) {
             throw new ResourceNotFoundException("No products found with the name " + name);
         }
-        Type listType = new TypeToken<Page<ProductResponse>>() {}.getType();
-        Page<ProductResponse> productResponse = modelMapper.map(products, listType);
-        return  productResponse;
+        return modelMapper.map(products, new TypeToken<Page<ProductResponse>>() {}.getType());
     }
 
     @Override

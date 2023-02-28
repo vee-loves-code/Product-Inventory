@@ -15,4 +15,7 @@ public class ProductRequest {
     private  String status;
     private  int quantityInStore;
     private BigDecimal price;
+
+    public ProductRequest(String test_product, double v) {
+    }
 }
